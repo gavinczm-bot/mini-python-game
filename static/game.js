@@ -13,6 +13,8 @@ let nextDirection;
 let score;
 let gameInterval;
 let gameOver;
+let touchStartX = 0;
+let touchStartY = 0;
 
 function startGame() {
     snake = [
@@ -123,7 +125,7 @@ function endGame() {
 
     ctx.font = "18px Arial";
     ctx.fillText("Score: " + score, canvas.width / 2, canvas.height / 2 + 25);
-    ctx.fillText("Click Restart to play again", canvas.width / 2, canvas.height / 2 + 55);
+    ctx.fillText("Tap Restart to play again", canvas.width / 2, canvas.height / 2 + 55);
 }
 
 function drawGame() {
@@ -180,16 +182,81 @@ function drawFood() {
     );
 }
 
-document.addEventListener("keydown", function(event) {
-    if (event.key === "ArrowUp" && direction !== "DOWN") {
+function changeDirection(newDirection) {
+    if (gameOver) {
+        return;
+    }
+
+    if (newDirection === "UP" && direction !== "DOWN") {
         nextDirection = "UP";
-    } else if (event.key === "ArrowDown" && direction !== "UP") {
+    } else if (newDirection === "DOWN" && direction !== "UP") {
         nextDirection = "DOWN";
-    } else if (event.key === "ArrowLeft" && direction !== "RIGHT") {
+    } else if (newDirection === "LEFT" && direction !== "RIGHT") {
         nextDirection = "LEFT";
-    } else if (event.key === "ArrowRight" && direction !== "LEFT") {
+    } else if (newDirection === "RIGHT" && direction !== "LEFT") {
         nextDirection = "RIGHT";
     }
+}
+
+document.addEventListener("keydown", function(event) {
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+        event.preventDefault();
+    }
+
+    if (event.key === "ArrowUp") {
+        changeDirection("UP");
+    } else if (event.key === "ArrowDown") {
+        changeDirection("DOWN");
+    } else if (event.key === "ArrowLeft") {
+        changeDirection("LEFT");
+    } else if (event.key === "ArrowRight") {
+        changeDirection("RIGHT");
+    }
 });
+
+document.querySelectorAll("[data-direction]").forEach(button => {
+    button.addEventListener("click", function() {
+        changeDirection(this.dataset.direction);
+    });
+
+    button.addEventListener("touchstart", function(event) {
+        event.preventDefault();
+        changeDirection(this.dataset.direction);
+    }, { passive: false });
+});
+
+canvas.addEventListener("touchstart", function(event) {
+    event.preventDefault();
+    const touch = event.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+}, { passive: false });
+
+canvas.addEventListener("touchmove", function(event) {
+    event.preventDefault();
+}, { passive: false });
+
+canvas.addEventListener("touchend", function(event) {
+    event.preventDefault();
+
+    if (!event.changedTouches.length) {
+        return;
+    }
+
+    const touch = event.changedTouches[0];
+    const diffX = touch.clientX - touchStartX;
+    const diffY = touch.clientY - touchStartY;
+    const minimumSwipe = 25;
+
+    if (Math.abs(diffX) < minimumSwipe && Math.abs(diffY) < minimumSwipe) {
+        return;
+    }
+
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        changeDirection(diffX > 0 ? "RIGHT" : "LEFT");
+    } else {
+        changeDirection(diffY > 0 ? "DOWN" : "UP");
+    }
+}, { passive: false });
 
 startGame();
