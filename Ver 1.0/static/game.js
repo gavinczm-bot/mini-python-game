@@ -1,7 +1,6 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const scoreText = document.getElementById("score");
-const startScreen = document.getElementById("startScreen");
 
 const boxSize = 20;
 const canvasSize = 400;
@@ -14,9 +13,8 @@ let nextDirection;
 let score;
 let gameInterval;
 let gameOver;
-let gameStarted = false;
 
-function resetGameState() {
+function startGame() {
     snake = [
         { x: 10, y: 10 }
     ];
@@ -31,24 +29,11 @@ function resetGameState() {
 
     scoreText.textContent = score;
 
-    drawGame();
-}
-
-function startGameFromButton() {
-    startScreen.classList.add("hidden");
-    startGame();
-}
-
-function startGame() {
-    gameStarted = true;
-    resetGameState();
-
     clearInterval(gameInterval);
     gameInterval = setInterval(gameLoop, 120);
 }
 
 function restartGame() {
-    startScreen.classList.add("hidden");
     startGame();
 }
 
@@ -72,7 +57,7 @@ function createFood() {
 }
 
 function gameLoop() {
-    if (gameOver || !gameStarted) {
+    if (gameOver) {
         return;
     }
 
@@ -197,10 +182,6 @@ function drawFood() {
 }
 
 document.addEventListener("keydown", function(event) {
-    if (!gameStarted || gameOver) {
-        return;
-    }
-
     if (event.key === "ArrowUp" && direction !== "DOWN") {
         nextDirection = "UP";
     } else if (event.key === "ArrowDown" && direction !== "UP") {
@@ -212,4 +193,4 @@ document.addEventListener("keydown", function(event) {
     }
 });
 
-resetGameState();
+startGame();
