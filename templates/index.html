@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Secret Garden Games</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
         body {
@@ -24,11 +25,58 @@
             z-index: 0;
         }
 
+        .secret-code-box {
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            z-index: 5;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            padding: 8px 10px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+            backdrop-filter: blur(3px);
+        }
+
+        .secret-code-box input {
+            width: 92px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 999px;
+            padding: 8px 10px;
+            background: rgba(2, 6, 23, 0.8);
+            color: white;
+            outline: none;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .secret-code-box input:focus {
+            border-color: #f9a8d4;
+            box-shadow: 0 0 14px rgba(249, 168, 212, 0.28);
+        }
+
+        .secret-code-box button {
+            border: none;
+            border-radius: 999px;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .secret-code-box button:hover {
+            background: linear-gradient(135deg, #db2777, #7c3aed);
+        }
+
         .page {
             position: relative;
             z-index: 1;
             min-height: 100vh;
-            padding: 50px 20px 60px 20px;
+            padding: 76px 20px 60px 20px;
             box-sizing: border-box;
         }
 
@@ -171,24 +219,26 @@
         }
 
         @keyframes titlePulse {
-            0%, 100% {
-                transform: scale(1);
-                filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.15));
-            }
-            50% {
-                transform: scale(1.03);
-                filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.35));
-            }
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.15)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.35)); }
         }
 
         @keyframes twinkle {
-            0%, 100% {
-                opacity: 0.2;
-                transform: scale(0.8);
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        @media (max-width: 520px) {
+            .secret-code-box {
+                position: relative;
+                top: auto;
+                right: auto;
+                width: fit-content;
+                margin: 12px auto 0 auto;
             }
-            50% {
-                opacity: 1;
-                transform: scale(1.5);
+
+            .page {
+                padding-top: 24px;
             }
         }
     </style>
@@ -196,6 +246,11 @@
 
 <body>
     <canvas id="fireworksCanvas"></canvas>
+
+    <div class="secret-code-box" aria-label="Special code entry">
+        <input id="specialCode" type="password" inputmode="numeric" maxlength="8" placeholder="Special code">
+        <button onclick="checkSpecialCode()">Go</button>
+    </div>
 
     <div class="page">
         <div class="hero">
@@ -232,6 +287,26 @@
     </div>
 
     <script>
+        function checkSpecialCode() {
+            const input = document.getElementById('specialCode');
+            const code = input.value.trim();
+
+            if (code === '0225') {
+                window.location.href = "{{ url_for('scarlett') }}";
+                return;
+            }
+
+            input.value = '';
+            input.placeholder = 'Try again';
+            input.focus();
+        }
+
+        document.getElementById('specialCode').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                checkSpecialCode();
+            }
+        });
+
         const canvas = document.getElementById('fireworksCanvas');
         const ctx = canvas.getContext('2d');
         let fireworks = [];
@@ -314,7 +389,6 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
         animate();
-
         createFirework();
         setInterval(createFirework, 1300);
     </script>

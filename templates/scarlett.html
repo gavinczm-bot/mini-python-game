@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scarlett's Secret Garden</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at 20% 15%, rgba(251, 207, 232, 0.36), transparent 28%),
+                radial-gradient(circle at 82% 22%, rgba(196, 181, 253, 0.28), transparent 30%),
+                radial-gradient(circle at 50% 95%, rgba(134, 239, 172, 0.22), transparent 35%),
+                linear-gradient(180deg, #39133f 0%, #1e1b4b 48%, #10291f 100%);
+            color: white;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        .floating-flowers {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .floating-flowers span {
+            position: absolute;
+            font-size: 28px;
+            animation: floatFlower 9s linear infinite;
+            opacity: 0.9;
+        }
+
+        .floating-flowers span:nth-child(1) { left: 8%; animation-delay: 0s; }
+        .floating-flowers span:nth-child(2) { left: 22%; animation-delay: 2s; }
+        .floating-flowers span:nth-child(3) { left: 38%; animation-delay: 4s; }
+        .floating-flowers span:nth-child(4) { left: 55%; animation-delay: 1s; }
+        .floating-flowers span:nth-child(5) { left: 72%; animation-delay: 3s; }
+        .floating-flowers span:nth-child(6) { left: 88%; animation-delay: 5s; }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding: 42px 20px 60px 20px;
+            box-sizing: border-box;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #fde68a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .hero {
+            max-width: 980px;
+            margin: 0 auto 34px auto;
+            padding: 34px 24px;
+            border-radius: 34px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: rgba(255, 255, 255, 0.09);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3), inset 0 0 45px rgba(249, 168, 212, 0.12);
+            backdrop-filter: blur(4px);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(42px, 8vw, 82px);
+            line-height: 1.02;
+            background: linear-gradient(90deg, #fff7ed, #f9a8d4, #c4b5fd, #86efac, #fde68a, #fff7ed);
+            background-size: 260% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: sparkleText 3.5s linear infinite, softPulse 2.5s ease-in-out infinite;
+        }
+
+        .subtitle {
+            margin-top: 16px;
+            color: #fff7ed;
+            font-size: clamp(18px, 4vw, 24px);
+            line-height: 1.45;
+        }
+
+        .scarlett-badge {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            background: rgba(236, 72, 153, 0.25);
+            border: 1px solid rgba(249, 168, 212, 0.42);
+            color: #ffe4e6;
+            font-weight: bold;
+        }
+
+        .game-grid {
+            max-width: 980px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.11);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 22px;
+            padding: 28px;
+            text-align: left;
+            box-shadow: 0 22px 44px rgba(0, 0, 0, 0.28);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .game-card:hover {
+            transform: translateY(-6px);
+            border-color: #f9a8d4;
+        }
+
+        .game-icon {
+            font-size: 44px;
+            margin-bottom: 12px;
+        }
+
+        .game-card h2 {
+            margin: 0 0 10px 0;
+            font-size: 25px;
+        }
+
+        .game-card p {
+            color: #fce7f3;
+            line-height: 1.55;
+            min-height: 78px;
+        }
+
+        .play-button {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            color: white;
+            text-decoration: none;
+            border-radius: 999px;
+            font-weight: bold;
+            box-shadow: 0 10px 24px rgba(236, 72, 153, 0.32);
+        }
+
+        .play-button:hover {
+            background: linear-gradient(135deg, #db2777, #7c3aed);
+        }
+
+        .coming-soon {
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        @keyframes sparkleText {
+            0% { background-position: 0% center; }
+            100% { background-position: 260% center; }
+        }
+
+        @keyframes softPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(249, 168, 212, 0.24)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 28px rgba(249, 168, 212, 0.5)); }
+        }
+
+        @keyframes floatFlower {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            12% { opacity: 0.95; }
+            88% { opacity: 0.95; }
+            100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="floating-flowers">
+        <span>🌸</span><span>🌼</span><span>🦋</span><span>🌷</span><span>✨</span><span>🌺</span>
+    </div>
+
+    <div class="page">
+        <a class="back-link" href="{{ url_for('home') }}">← Back to normal games</a>
+
+        <div class="hero">
+            <h1>Scarlett's Secret Garden</h1>
+            <div class="subtitle">A special garden of games made just for Scarlett.</div>
+            <div class="scarlett-badge">🌟 Secret code unlocked 🌟</div>
+        </div>
+
+        <div class="game-grid">
+            <div class="game-card">
+                <div class="game-icon">🐍🌸</div>
+                <h2>Scarlett Snake</h2>
+                <p>Play Snake with special Scarlett messages, garden colours, and celebration notes.</p>
+                <a class="play-button" href="{{ url_for('snake') }}?mode=scarlett">Play Scarlett Snake</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-icon">🎯💖</div>
+                <h2>Guess Number</h2>
+                <p>The normal number game is here for now. We can make this Scarlett-themed next.</p>
+                <a class="play-button" href="{{ url_for('guess_number') }}">Play Guess Number</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-icon">🧚‍♀️</div>
+                <h2>More Scarlett Games</h2>
+                <p>We can add fairy garden games, memory match, treasure hunt, or a Scarlett points board.</p>
+                <span class="play-button coming-soon">Coming Soon</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

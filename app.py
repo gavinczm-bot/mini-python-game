@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 
 app = Flask(__name__)
 
@@ -8,9 +8,16 @@ def home():
     return render_template("index.html")
 
 
+@app.route("/scarlett")
+def scarlett():
+    return render_template("scarlett.html")
+
+
 @app.route("/snake")
 def snake():
-    return render_template("game.html")
+    mode = request.args.get("mode", "normal")
+    is_scarlett = mode == "scarlett"
+    return render_template("game.html", is_scarlett=is_scarlett)
 
 
 @app.route("/game")

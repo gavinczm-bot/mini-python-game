@@ -1,6 +1,8 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const scoreText = document.getElementById("score");
+const scarlettMessage = document.getElementById("scarlettMessage");
+const isScarlettMode = document.body.dataset.scarlett === "true";
 
 const boxSize = 20;
 const canvasSize = 400;
@@ -16,6 +18,14 @@ let gameOver;
 let touchStartX = 0;
 let touchStartY = 0;
 
+function setScarlettMessage(text) {
+    if (!isScarlettMode || !scarlettMessage) {
+        return;
+    }
+
+    scarlettMessage.textContent = text;
+}
+
 function startGame() {
     snake = [
         { x: 10, y: 10 }
@@ -26,6 +36,10 @@ function startGame() {
     score = 0;
     gameOver = false;
     scoreText.textContent = score;
+
+    if (isScarlettMode) {
+        setScarlettMessage("Good luck Scarlett! 🌸");
+    }
 
     food = createFood();
 
@@ -87,11 +101,39 @@ function gameLoop() {
         score++;
         scoreText.textContent = score;
         food = createFood();
+        showFoodMessage();
     } else {
         snake.pop();
     }
 
     drawGame();
+}
+
+function showFoodMessage() {
+    if (!isScarlettMode) {
+        return;
+    }
+
+    if (score === 1) {
+        setScarlettMessage("Good job Scarlett! Your snake found its first food! 🌸");
+    } else if (score === 3) {
+        setScarlettMessage("Well done Scarlett! Three foods already! ✨");
+    } else if (score === 5) {
+        setScarlettMessage("Your snake ate five foods Scarlett! Amazing! 🐍💖");
+    } else if (score === 10) {
+        setScarlettMessage("Wow Scarlett, ten foods! Secret Garden champion! 🏆");
+    } else if (score % 5 === 0) {
+        setScarlettMessage("Fantastic Scarlett! Score " + score + "! 🌟");
+    } else {
+        const messages = [
+            "Nice one Scarlett! 🌷",
+            "Great move Scarlett! 🦋",
+            "Keep going Scarlett! ✨",
+            "Brilliant Scarlett! 🌸",
+            "Your snake is growing Scarlett! 🐍"
+        ];
+        setScarlettMessage(messages[Math.floor(Math.random() * messages.length)]);
+    }
 }
 
 function hitWall(head) {
@@ -113,6 +155,10 @@ function endGame() {
     gameOver = true;
     clearInterval(gameInterval);
 
+    if (isScarlettMode) {
+        setScarlettMessage("Game over Scarlett. Final score: " + score + ". You did great! 💖");
+    }
+
     drawGame();
 
     ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
@@ -121,7 +167,7 @@ function endGame() {
     ctx.fillStyle = "white";
     ctx.font = "32px Arial";
     ctx.textAlign = "center";
-    ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2 - 10);
+    ctx.fillText(isScarlettMode ? "Well Done Scarlett!" : "Game Over", canvas.width / 2, canvas.height / 2 - 10);
 
     ctx.font = "18px Arial";
     ctx.fillText("Score: " + score, canvas.width / 2, canvas.height / 2 + 25);
@@ -137,7 +183,7 @@ function drawGame() {
 }
 
 function drawGrid() {
-    ctx.strokeStyle = "#1e293b";
+    ctx.strokeStyle = isScarlettMode ? "#4c1d63" : "#1e293b";
 
     for (let x = 0; x < canvas.width; x += boxSize) {
         ctx.beginPath();
@@ -156,7 +202,9 @@ function drawGrid() {
 
 function drawSnake() {
     snake.forEach((part, index) => {
-        if (index === 0) {
+        if (isScarlettMode) {
+            ctx.fillStyle = index === 0 ? "#f472b6" : "#a78bfa";
+        } else if (index === 0) {
             ctx.fillStyle = "#22c55e";
         } else {
             ctx.fillStyle = "#16a34a";
@@ -168,11 +216,18 @@ function drawSnake() {
             boxSize - 1,
             boxSize - 1
         );
+
+        if (isScarlettMode && index === 0) {
+            ctx.fillStyle = "#fff7ed";
+            ctx.font = "12px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText("✨", part.x * boxSize + boxSize / 2, part.y * boxSize + 14);
+        }
     });
 }
 
 function drawFood() {
-    ctx.fillStyle = "#ef4444";
+    ctx.fillStyle = isScarlettMode ? "#facc15" : "#ef4444";
 
     ctx.fillRect(
         food.x * boxSize,
@@ -180,6 +235,13 @@ function drawFood() {
         boxSize - 1,
         boxSize - 1
     );
+
+    if (isScarlettMode) {
+        ctx.fillStyle = "#7c2d12";
+        ctx.font = "15px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("🌸", food.x * boxSize + boxSize / 2, food.y * boxSize + 16);
+    }
 }
 
 function changeDirection(newDirection) {
