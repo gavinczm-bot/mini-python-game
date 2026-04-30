@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Python Snake Game</title>
+    <title>Snake Game</title>
 
     <style>
         body {
@@ -20,6 +20,20 @@
             margin-bottom: 5px;
         }
 
+        .top-links {
+            margin-bottom: 15px;
+        }
+
+        .top-links a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .top-links a:hover {
+            text-decoration: underline;
+        }
+
         .score-box {
             font-size: 20px;
             margin-bottom: 15px;
@@ -36,14 +50,8 @@
             color: #d1d5db;
         }
 
-        .button-row {
+        button {
             margin-top: 15px;
-        }
-
-        button,
-        a.button-link {
-            display: inline-block;
-            margin: 5px;
             padding: 10px 22px;
             font-size: 16px;
             border: none;
@@ -51,26 +59,20 @@
             background: #22c55e;
             color: white;
             cursor: pointer;
-            text-decoration: none;
         }
 
-        button:hover,
-        a.button-link:hover {
+        button:hover {
             background: #16a34a;
-        }
-
-        a.secondary {
-            background: #3b82f6;
-        }
-
-        a.secondary:hover {
-            background: #2563eb;
         }
     </style>
 </head>
 
 <body>
     <div class="page">
+        <div class="top-links">
+            <a href="{{ url_for('home') }}">← Back to Games</a>
+        </div>
+
         <h1>Snake Game</h1>
 
         <div class="score-box">
@@ -79,16 +81,15 @@
 
         <canvas id="gameCanvas" width="400" height="400"></canvas>
 
-        <div class="button-row">
-            <button onclick="restartGame()">Restart Game</button>
-            <a class="button-link secondary" href="{{ url_for('start_page') }}">Back to Start Page</a>
-        </div>
+        <br>
+
+        <button onclick="restartGame()">Restart Game</button>
 
         <div class="controls">
             Use arrow keys to move the snake.
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='game.js') }}?v=3"></script>
+    <script src="{{ url_for('static', filename='game.js') }}"></script>
 </body>
 </html>

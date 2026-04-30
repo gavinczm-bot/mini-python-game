@@ -1,91 +1,126 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Snake Game - Start</title>
+    <title>Python Mini Games</title>
+
     <style>
         body {
             margin: 0;
-            min-height: 100vh;
             font-family: Arial, sans-serif;
-            background: radial-gradient(circle at top, #1f2937, #020617 65%);
+            background: #111827;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             text-align: center;
         }
 
-        .start-card {
-            width: 420px;
-            max-width: calc(100% - 40px);
-            background: rgba(17, 24, 39, 0.95);
-            border: 1px solid #374151;
-            border-radius: 24px;
-            padding: 36px 32px;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
-        }
-
-        .snake-icon {
-            font-size: 56px;
-            margin-bottom: 10px;
+        .page {
+            min-height: 100vh;
+            padding: 50px 20px;
+            box-sizing: border-box;
         }
 
         h1 {
             font-size: 42px;
-            margin: 0 0 12px 0;
+            margin-bottom: 10px;
         }
 
-        p {
+        .subtitle {
             color: #d1d5db;
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 10px 0;
-        }
-
-        .rules {
-            margin: 24px 0;
-            padding: 16px;
-            background: #020617;
-            border-radius: 16px;
-            border: 1px solid #1f2937;
-            text-align: left;
-        }
-
-        .rules div {
-            margin: 8px 0;
-            color: #e5e7eb;
-        }
-
-        a.start-button {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 14px 32px;
             font-size: 18px;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 999px;
+            margin-bottom: 40px;
+        }
+
+        .game-grid {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+        }
+
+        .game-card {
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 18px;
+            padding: 28px;
+            text-align: left;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: #22c55e;
+        }
+
+        .game-icon {
+            font-size: 42px;
+            margin-bottom: 14px;
+        }
+
+        .game-card h2 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        .game-card p {
+            color: #d1d5db;
+            line-height: 1.5;
+            min-height: 70px;
+        }
+
+        .play-button {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 11px 22px;
             background: #22c55e;
             color: white;
+            text-decoration: none;
+            border-radius: 9px;
+            font-weight: bold;
         }
 
-        a.start-button:hover {
+        .play-button:hover {
             background: #16a34a;
+        }
+
+        .coming-soon {
+            background: #4b5563;
+            cursor: not-allowed;
+        }
+
+        .coming-soon:hover {
+            background: #4b5563;
         }
     </style>
 </head>
+
 <body>
-    <div class="start-card">
-        <div class="snake-icon">🐍</div>
-        <h1>Snake Game</h1>
-        <p>Eat the red food, grow longer, and avoid hitting the walls or yourself.</p>
+    <div class="page">
+        <h1>Python Mini Games</h1>
+        <div class="subtitle">Choose a game to play</div>
 
-        <div class="rules">
-            <div><strong>Move:</strong> Arrow keys</div>
-            <div><strong>Goal:</strong> Eat as much food as possible</div>
-            <div><strong>Game Over:</strong> Wall hit or self collision</div>
+        <div class="game-grid">
+            <div class="game-card">
+                <div class="game-icon">🐍</div>
+                <h2>Snake Game</h2>
+                <p>Eat the food, grow the snake, and avoid crashing into the wall or yourself.</p>
+                <a class="play-button" href="{{ url_for('snake') }}">Play Snake</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-icon">🎯</div>
+                <h2>Guess Number</h2>
+                <p>Guess the secret number between 1 and 100. Try to win with the fewest attempts.</p>
+                <a class="play-button" href="{{ url_for('guess_number') }}">Play Guess Number</a>
+            </div>
+
+            <div class="game-card">
+                <div class="game-icon">🚧</div>
+                <h2>More Games</h2>
+                <p>More mini games can be added here later, such as Tic Tac Toe, Pong, or Memory Match.</p>
+                <span class="play-button coming-soon">Coming Soon</span>
+            </div>
         </div>
-
-        <a class="start-button" href="{{ url_for('game_page') }}">Start Game</a>
     </div>
 </body>
 </html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guess Number</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #111827;
+            color: white;
+            text-align: center;
+        }
+
+        .page {
+            min-height: 100vh;
+            padding: 40px 20px;
+            box-sizing: border-box;
+        }
+
+        .top-links {
+            margin-bottom: 25px;
+        }
+
+        .top-links a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .top-links a:hover {
+            text-decoration: underline;
+        }
+
+        .game-box {
+            max-width: 460px;
+            margin: 0 auto;
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        p {
+            color: #d1d5db;
+            line-height: 1.5;
+        }
+
+        input {
+            width: 160px;
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: 1px solid #4b5563;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 11px 22px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background: #22c55e;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #16a34a;
+        }
+
+        .secondary-button {
+            background: #3b82f6;
+            margin-left: 8px;
+        }
+
+        .secondary-button:hover {
+            background: #2563eb;
+        }
+
+        .message {
+            margin-top: 22px;
+            font-size: 20px;
+            font-weight: bold;
+            min-height: 28px;
+        }
+
+        .attempts {
+            margin-top: 12px;
+            color: #d1d5db;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <div class="top-links">
+            <a href="{{ url_for('home') }}">← Back to Games</a>
+        </div>
+
+        <div class="game-box">
+            <h1>Guess Number</h1>
+
+            <p>I am thinking of a number between <strong>1 and 100</strong>.</p>
+            <p>Try to guess it with the fewest attempts.</p>
+
+            <input id="guessInput" type="number" min="1" max="100" placeholder="1 - 100">
+
+            <br>
+
+            <button onclick="checkGuess()">Guess</button>
+            <button class="secondary-button" onclick="restartGuessGame()">Restart</button>
+
+            <div id="message" class="message"></div>
+            <div class="attempts">
+                Attempts: <span id="attempts">0</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='guess_number.js') }}"></script>
+</body>
+</html>
