@@ -31,12 +31,5 @@ def guess_number():
     return render_template("guess_number.html")
 
 
-@app.route("/obby")
-def obby():
-    mode = request.args.get("mode", "normal")
-    is_scarlett = mode == "scarlett"
-    return render_template("obby.html", is_scarlett=is_scarlett)
-
-
 if __name__ == "__main__":
     app.run(debug=True)

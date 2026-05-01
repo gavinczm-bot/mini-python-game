@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% if is_scarlett %}Scarlett Mini Obby{% else %}Mini Obby{% endif %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: {% if is_scarlett %}
+                radial-gradient(circle at 25% 12%, rgba(249, 168, 212, 0.35), transparent 28%),
+                radial-gradient(circle at 80% 18%, rgba(196, 181, 253, 0.28), transparent 30%),
+                linear-gradient(180deg, #39133f 0%, #1e1b4b 48%, #10291f 100%)
+            {% else %}
+                radial-gradient(circle at top, rgba(34, 197, 94, 0.18), transparent 35%),
+                linear-gradient(180deg, #081224 0%, #111827 45%, #0b1220 100%)
+            {% endif %};
+            color: white;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        .page {
+            min-height: 100vh;
+            padding: 28px 14px 36px 14px;
+            box-sizing: border-box;
+        }
+
+        .top-links {
+            margin-bottom: 12px;
+        }
+
+        .top-links a {
+            color: {% if is_scarlett %}#fde68a{% else %}#93c5fd{% endif %};
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .top-links a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            margin: 4px 0 8px 0;
+            font-size: clamp(30px, 7vw, 52px);
+            background: {% if is_scarlett %}
+                linear-gradient(90deg, #fff7ed, #f9a8d4, #c4b5fd, #86efac, #fde68a, #fff7ed)
+            {% else %}
+                linear-gradient(90deg, #ffffff, #86efac, #93c5fd, #ffffff)
+            {% endif %};
+            background-size: 240% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleFlash 3s linear infinite;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .message {
+            min-height: 28px;
+            margin-bottom: 12px;
+            color: {% if is_scarlett %}#fce7f3{% else %}#d1d5db{% endif %};
+            font-weight: bold;
+        }
+
+        .game-wrap {
+            width: min(960px, 96vw);
+            margin: 0 auto;
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 18px;
+            padding: 12px;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+        }
+
+        canvas {
+            width: 100%;
+            max-width: 920px;
+            aspect-ratio: 16 / 9;
+            height: auto;
+            background: #020617;
+            border-radius: 14px;
+            touch-action: none;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .buttons {
+            margin-top: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+            background: {% if is_scarlett %}linear-gradient(135deg, #ec4899, #8b5cf6){% else %}linear-gradient(135deg, #22c55e, #16a34a){% endif %};
+            font-weight: bold;
+        }
+
+        .mobile-controls {
+            display: none;
+            margin: 16px auto 0 auto;
+            max-width: 340px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .mobile-controls button {
+            padding: 16px 0;
+            font-size: 24px;
+            user-select: none;
+        }
+
+        .empty-cell {
+            visibility: hidden;
+        }
+
+        .instructions {
+            margin-top: 14px;
+            color: #d1d5db;
+            line-height: 1.45;
+        }
+
+        @keyframes titleFlash {
+            0% { background-position: 0% center; }
+            100% { background-position: 240% center; }
+        }
+
+        @media (max-width: 720px) {
+            .mobile-controls {
+                display: grid;
+            }
+
+            .instructions {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <div class="top-links">
+            {% if is_scarlett %}
+                <a href="{{ url_for('scarlett') }}">← Back to Scarlett's Secret Garden</a>
+            {% else %}
+                <a href="{{ url_for('home') }}">← Back to Games</a>
+            {% endif %}
+        </div>
+
+        <h1>{% if is_scarlett %}Scarlett Mini Obby{% else %}Mini Obby{% endif %}</h1>
+
+        <div class="hud">
+            <div>Stars: <span id="stars">0</span></div>
+            <div>Lives: <span id="lives">3</span></div>
+        </div>
+
+        <div id="message" class="message">
+            {% if is_scarlett %}Ready Scarlett? Jump to the finish flag!{% else %}Jump across the platforms and reach the finish flag.{% endif %}
+        </div>
+
+        <div class="game-wrap">
+            <canvas id="obbyCanvas" width="920" height="520" data-scarlett="{% if is_scarlett %}1{% else %}0{% endif %}"></canvas>
+        </div>
+
+        <div class="buttons">
+            <button onclick="restartObby()">Restart</button>
+        </div>
+
+        <div class="mobile-controls">
+            <button id="leftBtn">◀</button>
+            <button id="jumpBtn">▲</button>
+            <button id="rightBtn">▶</button>
+        </div>
+
+        <div class="instructions">
+            Desktop: A/D or Left/Right to move, Space/Up to jump.<br>
+            Mobile: use the buttons below the game.
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='obby.js') }}"></script>
+</body>
+</html>
